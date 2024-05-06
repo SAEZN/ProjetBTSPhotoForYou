@@ -1,118 +1,120 @@
 <?php
 class User
 {
-	// Attributs
-	private $_id;
-	private $_nom;
-	private $_prenom;
-	private $_type;
-	private $_mail;
-	private $_mdp;
-	private $_credit;
+    // Attributs
+    private $_id;
+    private $_nom;
+    private $_prenom;
+    private $_type;
+    private $_mail;
+    private $_mdp;
+    private $_credit;
+    private $_role; // Ajout de l'attribut role
 
-	public function __construct(array $donnees)
-	{
-		$this->hydrate($donnees);
-	}
+    public function __construct(array $donnees)
+    {
+        $this->hydrate($donnees);
+    }
 
-	public function hydrate(array $donnees)
-	{
-		foreach ($donnees as $key => $value) {
-			$method = 'set'.ucfirst($key);
+    public function hydrate(array $donnees)
+    {
+        foreach ($donnees as $key => $value) {
+            $method = 'set'.ucfirst($key);
 
-			if (method_exists($this, $method))
-			{
-				$this->$method($value);
-			}
-		}
-	}
+            if (method_exists($this, $method))
+            {
+                $this->$method($value);
+            }
+        }
+    }
 
-	// Getters
+    // Getters
 
-	public function getId()
-	{
-		return $this->_id;
-	}
+    public function getId()
+    {
+        return $this->_id;
+    }
 
-	public function getNom()
-	{
-		return $this->_nom;
-	}
+    public function getNom()
+    {
+        return $this->_nom;
+    }
 
-	public function getPrenom()
-	{
-		return $this->_prenom;
-	}
+    public function getPrenom()
+    {
+        return $this->_prenom;
+    }
 
-	public function getMail()
-	{
-		return $this->_mail;
-	}
+    public function getMail()
+    {
+        return $this->_mail;
+    }
 
-	public function getType()
-	{
-		return $this->_type;
-	}
+    public function getCredit()
+    {
+        return $this->_credit;
+    }
 
-	public function getCredit()
-	{
-		return $this->_credit;
-	}
+    public function getMdp()
+    {
+        return $this->_mdp;
+    }
 
-	public function getMdp()
-	{
-		return $this->_mdp;
-	}
-	// Setters
+    public function getRole() // Getter pour le rôle
+    {
+        return $this->_role;
+    }
 
-	public function setId($id)
-	{
-		$id = (int) $id;
-		if ($id > 0)
-		{
-			$this->_id = $id;
-		}	
-	}
+    // Setters
 
-	public function setCredit($credit)
-	{
-		$credit = (int) $credit;
-		$this->_credit = $credit;
-	}
+    public function setId($id)
+    {
+        $id = (int) $id;
+        if ($id > 0)
+        {
+            $this->_id = $id;
+        }   
+    }
 
-	public function setNom($nom)
-	{
-		if (is_string($nom))
-		{
-			$this->_nom = $nom;
-		}	
-	}
+    public function setCredit($credit)
+    {
+        $credit = (int) $credit;
+        $this->_credit = $credit;
+    }
 
-	public function setPrenom($prenom)
-	{
-		if (is_string($prenom))
-		{
-			$this->_prenom = $prenom;
-		}	
-	}
+    public function setNom($nom)
+    {
+        if (is_string($nom))
+        {
+            $this->_nom = $nom;
+        }   
+    }
 
-	public function setType($type)
-	{
-		if (is_string($type))
-		{
-			$this->_type = $type;
-		}
-	}
-	
-	public function setMail($mail)
-	{
-		$this->_mail = $mail;
-	}
+    public function setPrenom($prenom)
+    {
+        if (is_string($prenom))
+        {
+            $this->_prenom = $prenom;
+        }   
+    }
 
-	public function setMdp($mdp)
-	{
-		$this->_mdp = $mdp;
-	}
+    
+    public function setMail($mail)
+    {
+        $this->_mail = $mail;
+    }
+
+    public function setMdp($mdp)
+    {
+        $this->_mdp = $mdp;
+    }
+
+    public function setRole($role) // Setter pour le rôle
+    {
+        if (is_string($role))
+        {
+            $this->_role = $role;
+        }
+    }
 
 }
-?>

@@ -4,6 +4,5 @@
 		<?php include("include/carrousel.inc.php");?>
 		<?php include("include/categories.inc.php");?>
 		<?php include("include/prix.inc.php");?>
-		<?php include("galeriePhoto.php");?>
 	</div>
 <?php include ("include/piedDePage.inc.php");?>

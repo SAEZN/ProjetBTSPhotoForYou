@@ -1,58 +1,71 @@
 <?php
 class UserManager
 {
-	private $_db;
+    private $_db;
 
-	public function __construct($db)
-	{
-		$this->setDB($db);
-	}
+    public function __construct($db)
+    {
+        $this->setDB($db);
+    }
 
-	public function add(User $user)
-	{
-		$q = $this->_db->prepare('INSERT INTO users(nom,prenom,type,mail,mdp) VALUES(:nom, :prenom, :type, :mail, :mdp)');
-		$q->bindValue(':nom', $user->getNom());
-		$q->bindValue(':prenom', $user->getPrenom());
-		$q->bindValue(':type', $user->getType());
-		$q->bindValue(':mail', $user->getMail());
-		$q->bindValue(':mdp', $user->getMdp());
+    public function add(User $user)
+    {
+        $q = $this->_db->prepare('INSERT INTO utilisateurs(nom_utilisateur, adresse_email, mot_de_passe, role) VALUES(:nom, :mail, :mdp, :role)');
+        $q->bindValue(':nom', $user->getNom());
+        $q->bindValue(':mail', $user->getMail());
+        $q->bindValue(':mdp', $user->getMdp());
+        $q->bindValue(':role', $user->getRole());
 
-		$q->execute();
+        $q->execute();
 
-		$user->hydrate([
-			'Id' => $this->_db->lastInsertId(),
-			'Credit' => 0]);
-	}
+        $user->hydrate([
+            'id' => $this->_db->lastInsertId(),
+            'credits' => 0
+        ]);
+    }
 
-	public function getUser($sonMail)
-	{
-		$q= $this->_db->query('SELECT Nom, Prenom, Mail, Mdp, Type FROM users WHERE Mail = "'. $sonMail .'"');
-		$userInfo = $q->fetch(PDO::FETCH_ASSOC);
-		if ($userInfo)
-		{
-			return new User($userInfo);
-		}	
-		else
-		{
-			return $userInfo;
-		}
-	}
+    public function getUser($sonMail)
+    {
+        $q= $this->_db->prepare('SELECT id, nom_utilisateur as nom, adresse_email as mail, mot_de_passe as mdp, role FROM utilisateurs WHERE adresse_email = :mail');
+        $q->execute(array(':mail' => $sonMail));
+        $userInfo = $q->fetch(PDO::FETCH_ASSOC);
+        if ($userInfo) {
+            return new User($userInfo);
+        } else {
+            return $userInfo;
+        }
+    }
 
-	public function count()
-	{
-		return $this->_db->query("SELECT COUNT(*) FROM users")->fetchColumn();
-	}
+    public function updateRole($userId, $newRole)
+    {
+        $allowedRoles = ['admin', 'photographe', 'invite'];
+        if (!in_array($newRole, $allowedRoles)) {
+            throw new Exception("Rôle invalide");
+        }
 
-	public function exists($mailUser, $mdpUser)
-	{
-		$q= $this->_db->prepare('SELECT COUNT(*) FROM users WHERE mail = :mail AND mdp = :mdp');
-		$q->execute([':mail'=> $mailUser, ':mdp'=> $mdpUser]);
-		return (bool) $q->fetchColumn();
-	}
+        $q = $this->_db->prepare('UPDATE utilisateurs SET role = :role WHERE id = :id');
+        $q->execute(array(':role' => $newRole, ':id' => $userId));
 
-	public function setDb(PDO $db)
-	{
-		$this->_db = $db;
-	}
+        if ($q->rowCount() === 0) {
+            throw new Exception("Échec de la mise à jour du rôle de l'utilisateur");
+        }
+    }
+
+    public function count()
+    {
+        return $this->_db->query("SELECT COUNT(*) FROM utilisateurs")->fetchColumn();
+    }
+
+    public function exists($mailUser, $mdpUser)
+    {
+        $q = $this->_db->prepare('SELECT COUNT(*) FROM utilisateurs WHERE adresse_email = :mail AND mot_de_passe = :mdp');
+        $q->execute([':mail' => $mailUser, ':mdp' => $mdpUser]);
+        return (bool) $q->fetchColumn();
+    }
+
+    public function setDB(PDO $db)
+    {
+        $this->_db = $db;
+    }
 }
 ?>

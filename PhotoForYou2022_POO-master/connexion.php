@@ -1,28 +1,31 @@
 <?php
-include ("include/entete.inc.php");
-if (isset($_POST['identifier']))
-{
-  if ($utilisateur=$manager->getUser($_POST['mail']))
-  {
+include("include/entete.inc.php");
 
-    if ($utilisateur->getMdp() == $_POST['motdepasse'])
-    {
-      session_start ();
-      $_SESSION['login'] = true;
-      $_SESSION['NomUtilisateur'] = $utilisateur->getPrenom();
-      header('Location: membres.php');
+if (isset($_POST['identifier'])) {
+    $user = $manager->getUser($_POST['mail']);
+    if ($user) {
+        if ($user->getMdp() == $_POST['motdepasse']) {
+            session_start();
+            $_SESSION['login'] = true;
+            $_SESSION['NomUtilisateur'] = $user->getPrenom();
+            $_SESSION['role'] = $user->getRole();
+            header('Location: membres.php'); // Rediriger vers la page des membres
+            exit();
+        } else {
+            header('Location: index.php?error=1'); // Mauvais mot de passe
+            exit();
+        }
+    } else {
+        header('Location: index.php?error=2'); // Utilisateur non trouvé
+        exit();
     }
-    else
-    {
-      header('Location: index.php');
-      echo "<p>Il existe pas</p>";
-    }
-  }
 }
 
 ?>
 	<div class="container">
-  <?php echo generationEntete("Connexion", "Merci de vous identifier") ?>
+  <?php
+  //formulaire de connexion
+  echo generationEntete("Connexion", "Merci de vous identifier") ?>
     <div class="jumbotron">
     <form method="post" id="formId"  novalidate>
       <div class="form-group row">
@@ -67,21 +70,22 @@ if (isset($_POST['identifier']))
     </form>
   </div>
   <script>
-  (function() {
-    "use strict"
-    window.addEventListener("load", function() {
-      var form = document.getElementById("formId")
-      form.addEventListener("submit", function(event) {
-        if (form.checkValidity() == false) {
-          event.preventDefault()
-          event.stopPropagation()
-        }
-        form.classList.add("was-validated")
-      }, false)
-    }, false)
-  }())
-  </script>
+    // Validation du formulaire
+    (function() {
+        "use strict"
+        window.addEventListener("load", function() {
+            var form = document.getElementById("formId")
+            form.addEventListener("submit", function(event) {
+                if (form.checkValidity() == false) {
+                    event.preventDefault()
+                    event.stopPropagation()
+                }
+                form.classList.add("was-validated")
+            }, false)
+        }, false)
+    }())
+</script>
 
-  <?php
-    include ("include/piedDePage.inc.php");
-  ?>
+<?php
+include("include/piedDePage.inc.php");
+?>

@@ -2,13 +2,16 @@
 
 function generationEntete(string $titre, string $sous_titre): string
 {
-  // Voir pour le traitement si besoins des chaines
-  return '<div class="py-5 text-center">
-                <img class="d-block mx-auto mb-2" src="images/logo.png" alt="logo photoforyou" width="170" height="115">
-                <h1 class="display-5">'.$titre.'</h1>
-                <p class="lead">'.$sous_titre.'</p>
-          </div>';
+    // Voir pour le traitement si besoins des chaines
+    $entete = '<div class="py-5 text-center">
+                    <img class="d-block mx-auto mb-2" src="images/logo.png" alt="logo photoforyou" width="170" height="115">
+                    <h1 class="display-5">'.$titre.'</h1>
+                    <p class="lead">'.$sous_titre.'</p>';
+    $entete .= '</div>';
+
+    return $entete;
 }
+
 function generationOptions(string $titre,  string $libelle,string $url_image="s-l500.jpg", string $lien='#', string $titre_boutons="Gérer"): string
 {
   return '

@@ -3,9 +3,18 @@ include ("include/entete.inc.php");
 if (isset($_POST['valider']))
 {
   // a securiser
-  $user = new User(['Nom' => $_POST['nom'], 'Prenom' => $_POST['prenom'], 'Mail' => $_POST['mail'], 'Mdp' => $_POST['motdepasse1'],  'Type' => $_POST['choixType']]); 
+  $user = new User([
+   'Nom' => $_POST['nom'],
+   'Prenom' => $_POST['prenom'],
+   'Mail' => $_POST['mail'],
+   'Mdp' => $_POST['motdepasse1'], 
+   'Role' => $_POST['choixType']
+  ]); 
+
+  // Ajouter l'utilisateur à la base de données
   $manager->add($user);
   header('Location: inscriptionOK.php'); 
+  exit();
 }
 
 ?>
@@ -60,15 +69,15 @@ if (isset($_POST['valider']))
 
       <!-- Choix entre Client ou Photographe -->
       <div class="btn-group btn-group-toggle" data-toggle="buttons">
-        <label class="btn btn-info">
-          <input type="radio" name="choixType" id="client" value="client">
-          Client
-        </label>
-        <label class="btn btn-info">
-          <input type="radio" name="choixType" id="Photographe" value="Photographe">
-          Photographe
-        </label>
-      </div>
+                <label class="btn btn-info">
+                    <input type="radio" name="choixType" id="client" value="client">
+                    Client
+                </label>
+                <label class="btn btn-info">
+                    <input type="radio" name="choixType" id="photographe" value="photographe">
+                    Photographe
+                </label>
+            </div>
 
       <div class="form-group">
         <div class="form-check">
